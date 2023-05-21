@@ -1,0 +1,109 @@
+{{ define "admin"}}
+<tr>
+    <!--<td><img src="/static/images/img_avatar0.png" alt="Avatar" class="avatar"></td> -->
+    <td>{{ .Name }}</td>
+    <td>{{ .Game }}</td>
+    <td>{{ .Task }}</td>
+    <td><span class="priority-{{ .Priority }} priority">{{ .Priority }}</span></td>
+    <td class="status">{{ .Status }}</td>
+    <td>{{ .Date }}</td>
+    <td class="status">
+      <form action="/changestatus" method="POST">
+        <div class="btn-group btn-group-sm" role="group">
+          {{ if ne .Status "ok" }}
+            {{ if eq .Status "submitted" }}
+            <button type="submit" class="btn btn-success accept-btn" name="status" value="ok"><i class="fa-solid fa-check"></i></button>
+            <input type="hidden" name="accept-btn-data" value="some data">
+            <button type="submit" class="btn btn-danger reject-btn" name="status" value="rejected"><i class="fa-solid fa-x"></i></button>
+            <input type="hidden" name="reject-btn-data" value="some data">
+            {{ end }}
+          <button type="submit" class="btn btn-secondary delete-btn" name="status" value="deleted"><i class="fa-solid fa-trash"></i></button>
+          <input type="hidden" name="delete-btn-data" value="some data">
+          <input type="hidden" name="taskid" value="{{ .ID }}">
+          {{ end }}
+          <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-comments"></i></button>
+            <div class="dropdown-menu p-4 text-muted">
+              <p>{{ .Comment }}</p>
+            </div>
+          </div>
+          <input type="text" class="form-control" placeholder="Comment" name="comment">
+        </div>
+        <input type="hidden" name="company" value="{{ .Company }}">
+      </form>
+    </td>
+</tr>
+{{ end }}
+
+{{ define "user" }}
+<tr>
+    <!--<td><img src="/static/images/img_avatar0.png" alt="Avatar" class="avatar"></td>-->
+    <td>{{ .Name }}</td>
+    <td>{{ .Game }}</td>
+    <td>{{ .Task }}</td>
+    <td><span class="priority-{{ .Priority }} priority">{{ .Priority }}</span></td>
+    <td class="status">{{ .Status }}</td>
+    <td>{{ .Date }}</td>
+    <td class="status">
+        <form action="/changestatus" method="POST">
+          <div class="btn-group btn-group-sm" role="group">
+            {{ if ne .Status "ok" }}
+            <button type="submit" class="btn btn-success submit-btn" name="status" value="submitted"><i class="fa-solid fa-share-from-square"></i></i></button>
+            <input type="hidden" name="submit-btn-data" value="some data">
+            {{ end }}
+            <div class="dropdown">
+                <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"><i class="fa-regular fa-comments"></i></button>
+                <div class="dropdown-menu p-4 text-muted">
+                <p>{{ .Comment }}</p>
+                </div>
+            </div>
+            <input type="text" class="form-control" placeholder="Comment" name="comment">
+          </div>
+          <input type="hidden" name="taskid" value="{{ .ID }}">
+          <input type="hidden" name="company" value="{{ .Company }}">
+        </form>
+    </td>
+</tr>
+{{ end }}
+
+{{ define "admindashboard" }}
+<form action="/task" method="POST">
+  <div class="form-row">
+    <div class="col">
+      <select class="form-control" name="name">
+        <option selected>User</option>
+        {{ range .allusers }}
+          <option>{{ . }}</option>
+        {{ end }}
+      </select>
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Game" name="game">
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Task" name="task">
+    </div>
+    <div class="col">
+      <select class="form-control" name="priority">
+        <option selected>Priority...</option>
+        <option>low</option>
+        <option>medium</option>
+        <option>high</option>
+      </select>
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" placeholder="Comment" name="comment">
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-dark">Add Task</button>
+    </div>
+  </div>
+  <input type="hidden" name="company" value="{{ .user.Company }}">
+</form>
+{{ end }}
+
+{{ define "userdashboard" }}
+
+{{ end }}
+
+{{ template "block.html" . }}

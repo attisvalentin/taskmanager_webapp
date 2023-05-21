@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <title>Task list</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+    <div class="col-lg-8 col-md-10">
+      <form action="/logout" class="form-row" id="LogForm">
+        <div class="col">
+          <h4 class="form-row text-light">{{ .user.Username }}</h4>
+          <a href="#" onclick="submitForm()" class="text-light">Logout</a>
+        </div>
+      </form>
+    </div>
+  </nav>
+
+  <header class="container">
+    <div class="header-text text-center">
+      <h1>Task manager</h1>
+    </div>
+    {{ if eq .user.Access "admin"}}
+    <div class="container my-3">
+      <div class="d-flex justify-content-center">
+        <form action="/adduser" method="POST" class="form-row">
+          <div class="form-row">
+            <div class="col">
+              <input type="text" class="form-control" name="username" placeholder="Username">
+            </div>
+            <div class="col">
+              <input type="password" class="form-control" name="password" placeholder="Password">
+            </div>
+            <div class="col">
+              <input type="text" class="form-control" name="name" placeholder="Name">
+            </div>
+            <div class="col">
+              <select class="form-control" name="access">
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+            </div>
+            <input type="hidden" name="company" value="{{  .user.Company }}">
+            <div class="col">
+              <button type="submit" class="btn btn-dark">Add user</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    {{ end }}
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-lg-12">
+        {{ if eq .user.Access "admin"}}
+          {{ block "admindashboard" . }}{{ end }}
+        {{ else }}
+          {{ block "userdashboard" . }}{{ end }}
+        {{ end }}
+      </div>
+    </div>
+    <div class="row mt-6">
+      <div class="col-lg-8 col-lg-12 mx-auto">
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Game</th>
+              <th scope="col">Task</th>
+              <th scope="col">Priority</th>
+              <th scope="col">Status</th>
+              <th scope="col">Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ if eq .user.Access "admin"}}
+              {{ range .response }}
+                {{ block "admin" . }}{{ end }}
+              {{ end }}
+            {{ else }}
+              {{ range .response }}
+                {{ block "user" . }}{{ end }}
+              {{ end }}
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </header>
+  <script>
+    function submitForm() {
+      document.getElementById("LogForm").submit();
+    }
+    const buttons = document.querySelectorAll('.btn-group button');
+    buttons.forEach(button => {
+      button.addEventListener('click', event => {
+        const dataValue = button.getAttribute('data-value');
+        const hiddenInput = document.querySelector(`input[name="${button.name}-btn-data"]`);
+        hiddenInput.value = dataValue;
+      });
+    });
+  </script>
+  <script src="https://kit.fontawesome.com/b8bdb816c5.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+</body>
+</html>

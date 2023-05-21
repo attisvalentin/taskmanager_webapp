@@ -1,0 +1,30 @@
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.priority {
+  display: inline-block;
+  text-align: center;
+  padding: 4px 20px 4px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+.priority-low {
+  color: #fff;
+  background-color: green;
+}
+.priority-medium {
+  color: #000000;
+  background-color: yellow;
+}
+.priority-high {
+  color: #fff;
+  background-color: red;
+}
+
+.btn {
+  padding: 4px 20px 4px 20px;
+  border-radius: 10px;
+}
