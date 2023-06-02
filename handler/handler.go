@@ -24,19 +24,17 @@ func Firstinit() {
 }
 
 func LoadLogin(c *gin.Context) {
-	_, err := c.Cookie("tasklistcookie")
-	if err != nil {
+	if _, err := c.Cookie("tasklistcookie"); err != nil {
 		c.HTML(http.StatusOK, "login.html", nil)
 		return
 	}
-
 	c.Redirect(http.StatusSeeOther, "/index")
 }
 
 func Login(c *gin.Context) {
-	user := c.PostForm("username")
-	password := c.PostForm("password")
-	company := c.PostForm("company")
+	user, password, company := c.PostForm("username"), c.PostForm("password"), c.PostForm("company")
+	// password := c.PostForm("password")
+	// company := c.PostForm("company")
 	userpassword, newUserID := dbhandler.LoginHandler(user, password, company)
 	hashedPassword := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
 	if hashedPassword == userpassword {
@@ -57,14 +55,24 @@ func LoadRegisterForm(c *gin.Context) {
 }
 
 func Register(c *gin.Context) {
-	newUser := []string{c.PostForm("username"), fmt.Sprintf("%x", sha256.Sum256([]byte(c.PostForm("password")))), c.PostForm("company"), c.PostForm("name")}
+	newUser := []string{
+		c.PostForm("username"), 
+		fmt.Sprintf("%x", sha256.Sum256([]byte(c.PostForm("password")))), 
+		c.PostForm("company"), 
+		c.PostForm("name")}
 	dbhandler.RegisterHandler(newUser)
 	c.Redirect(http.StatusSeeOther, "/")
 }
 
 func AddUser(c *gin.Context) {
-	user := []string{}
-	user = append(user, c.PostForm("username"), fmt.Sprintf("%x", sha256.Sum256([]byte(c.PostForm("password")))), c.PostForm("access"), c.PostForm("name"), c.PostForm("company"))
+	user := []string{
+		c.PostForm("username"),
+		fmt.Sprintf("%x", sha256.Sum256([]byte(c.PostForm("password")))),
+		c.PostForm("access"),
+		c.PostForm("name"),
+		c.PostForm("company"),
+	}
+	// user = append(user, c.PostForm("username"), fmt.Sprintf("%x", sha256.Sum256([]byte(c.PostForm("password")))), c.PostForm("access"), c.PostForm("name"), c.PostForm("company"))
 	dbhandler.AddNewUser(user)
 	c.Redirect(http.StatusSeeOther, "/index")
 }
@@ -97,10 +105,10 @@ func AddTask(c *gin.Context) {
 }
 
 func ChangeStatus(c *gin.Context) {
-	status := c.PostForm("status")
+	status, comment, company := c.PostForm("status"), c.PostForm("comment"), c.PostForm("company")
 	id, _ := strconv.ParseFloat(c.PostForm("taskid"), 64)
-	comment := c.PostForm("comment")
-	company := c.PostForm("company")
+	// comment := c.PostForm("comment")
+	// company := c.PostForm("company")
 	dbhandler.ChangeStatus(status, comment, company, int(id))
 	c.Redirect(http.StatusSeeOther, "/index")
 }

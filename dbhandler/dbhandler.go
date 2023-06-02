@@ -79,8 +79,7 @@ func dbConn(data Database) {
 
 func ReturnTaskIndex() int {
 	var id int
-	err := db.QueryRow("SELECT taskindex FROM vars").Scan(&id)
-	if err != nil {
+	if err := db.QueryRow("SELECT taskindex FROM vars").Scan(&id); err != nil {
 		panic(err)
 	}
 	return id
@@ -97,8 +96,7 @@ func LoginHandler(user, password, company string) (string, string) {
 	}
 
 	for dbuser.Next() {
-		err := dbuser.Scan(&userpassword, &userID)
-		if err != nil {
+		if err := dbuser.Scan(&userpassword, &userID); err != nil {
 			panic(err)
 		}
 	}
