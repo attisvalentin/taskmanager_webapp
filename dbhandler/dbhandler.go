@@ -13,31 +13,16 @@ import (
 )
 
 type Database struct {
-	Username string
-	Password string
-	Host     string
-	Port     string
-	Database string
+	Username, Password, Host, Port, Database string
 }
 
 type NewUser struct {
-	Username string
-	Password string
-	Access   string
-	ID       string
-	Name     string
+	Username, Password, Access, ID, Name string
 }
 
 type Task struct {
-	Name     string
-	Game     string
-	Task     string
-	Priority string
-	Status   string
+	Name, Game, Task, Priority, Status, Comment, Date, Company string
 	ID       int
-	Comment  string
-	Date     string
-	Company  string
 }
 
 // var taskID int
@@ -158,9 +143,7 @@ func GetUser(id string) (string, string, string) {
 	if err != nil {
 		panic(err)
 	}
-	var name string
-	var access string
-	var company string
+	var name, access, company string
 	for dbVarQuery.Next() {
 		err = dbVarQuery.Scan(&name, &access, &company)
 		if err != nil {

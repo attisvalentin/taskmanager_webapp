@@ -13,10 +13,7 @@ import (
 )
 
 type User struct {
-	Username string
-	Access   string
-	ID       string
-	Company  string
+	Username, Access, ID, Company string
 }
 
 func Firstinit() {
